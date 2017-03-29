@@ -4,7 +4,7 @@ Automated Drink Machine
 
 Run instructions Install node and npm
 
-git clone https://github.com/faskowbn/Mixr.git
+git clone https://github.com/faskowbn/WishWash.git
 
 npm install
 
