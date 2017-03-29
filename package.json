@@ -1,8 +1,7 @@
 {
-  "name": "Mixr",
+  "name": "WishWash",
   "version": "1.0.0",
-  "description": "A Drink Mixing App",
-  "main": "twilio/index.js",
+  "description": "A Laundry Connections App",
   "private": true,
   "scripts": {
     "start": "node src/server/index.js"

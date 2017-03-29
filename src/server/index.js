@@ -38,6 +38,12 @@ app.use(session({
     path: '/'
 }));
 
+app.get('/', function(req, res) {
+    res.render('landing', {
+        title: 'WishWash'
+    });
+})
+
 app.get('*', function(req, res) {
     res.render('base', {
         title: 'WishWash'

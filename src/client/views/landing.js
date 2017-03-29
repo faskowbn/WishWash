@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Link } from 'react-router';
-import RaisedButton from 'material-ui/RaisedButton';
+import GoogleLogin from 'react-google-login';
 
 export class Landing extends React.Component {
     constructor(props) {
@@ -15,7 +15,7 @@ export class Landing extends React.Component {
     render() {
         return (
             <div>
-                <h1>I like washing clothes</h1>
+                <h1>We are excited you're here </h1>
             </div>
         );
     }

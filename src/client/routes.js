@@ -37,7 +37,7 @@ class App extends React.Component {
 
 let Routes = (
     <Router history={browserHistory}>
-        <Route path="/" component={App} >
+        <Route path="/landing" component={App} >
             <IndexRoute component={Landing} name="landing"/>
         </Route>
     </Router>
