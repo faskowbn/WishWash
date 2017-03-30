@@ -5,6 +5,12 @@ html(lang="en")
         meta(charset="utf-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1")
+        meta(name="google-signin-client_id" content="1025429036835-lko8cun24hcb2vc5qe1osf8jpjtg5tit.apps.googleusercontent.com")
+        script(src='https://apis.google.com/js/platform.js?onload=triggerGoogleLoaded', async='', defer='')
+        script.
+            function triggerGoogleLoaded() {
+                window.dispatchEvent(new Event('google-loaded'));
+            }
         title!= title
     body
         div#mainDiv
