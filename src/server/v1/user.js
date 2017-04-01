@@ -129,7 +129,6 @@ module.exports.editUser = function(req, res) {
 };
 
 module.exports.getUserByUsername = function(req, res) {
-    let data = req.body;
     //if (session support)
     User.findOne({"username": req.params.username}, function(err, user) {
         if (err) {
@@ -145,7 +144,6 @@ module.exports.getUserByUsername = function(req, res) {
 };
 
 module.exports.getUserById = function(req, res) {
-    let data = req.body;
     User.findOne({"_id": req.params.id}, function(err, user) {
         if (err) {
             res.status(400).send({ error: 'error when querying database' });
@@ -159,6 +157,19 @@ module.exports.getUserById = function(req, res) {
     });
 };
 
+module.exports.getUserByEmail = function(req, res) {
+    User.findOne({"primary_email": req.params.email}, function(err, user) {
+        if (err) {
+            res.status(400).send({ error: 'error when querying database' });
+        } else if (!user) {
+            res.status(404).send({error: 'profile not found'});
+        } else {
+            res.status(200).send({
+                user: user
+            });
+        }
+    });
+}
 //later
 //getAllWashMessagesByUser
 //getAllWishMessagesByUser

@@ -53,8 +53,19 @@ class User {
         this.data = data ? JSON.parse(data) : {
             last_name: "",
             first_name: "",
+            username: "",
+            phone: "",
+            gender: "",
+            genderOfWasherPreferences: "",
             imageUrl: "",
-            primary_email: ""
+            primary_email: "",
+            location: "",
+            created: "",
+            loadsWished: "",
+            loadsWashed: "",
+            averageWashWating: "",
+            bio: "",
+            admin: ""
         };
     }
 
@@ -63,8 +74,6 @@ class User {
         this.data = data;
         // Store into localStorage
         localStorage.setItem('user', JSON.stringify(data));
-        // Go to user profile
-        browserHistory.push(`/profile/${data.id}`);
     }
 
     //TODO: look at how to do this
@@ -93,8 +102,8 @@ let Routes = (
     <Router history={browserHistory}>
         <Route path="/" component={App} >
             <IndexRoute component={Landing} name="landing" user={user}/>
-            <Route name="editProfile" path="/profile/edit/:id" component={EditProfile} user={user}/>
-            <Route name="profile" path="/profile/:id" component={Profile} user={user}/>
+            <Route name="editProfile" path="/profile/edit/:username" component={EditProfile} user={user}/>
+            <Route name="profile" path="/profile/:username" component={Profile} user={user}/>
             <Route name="messageBoard" path="/messageBoard" component={MessageBoard} user={user}/>
             <Route name="register" path="/register" component={Register} user={user}/>
             <Route name="unauthorized" path="/unauthorized" component={Unauthorized} user={user}/>

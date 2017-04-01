@@ -15,7 +15,7 @@ module.exports.addSession = function(req, res) {
             if (err) {
                 res.status(400).send({error: 'id token not verified'})
             } else {
-                req.session.token = tokenInfo;
+                req.session.email = data.email;
                 res.status(200).send({});
             }
         })

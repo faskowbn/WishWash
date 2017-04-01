@@ -4,7 +4,7 @@
 'use strict';
 
 import React from 'react';
-import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import GoogleLogin from 'react-google-login';
 import RaisedButton from 'material-ui/RaisedButton'
 
@@ -24,25 +24,49 @@ export class Landing extends React.Component {
     onSuccess(googleUser) {
         let profile = googleUser.getBasicProfile();
         let idToken = googleUser.getAuthResponse().id_token;
-
         $.ajax({
-            url: "/v1/session/",
-            data: {
-                idToken: idToken,
-                email: profile.getEmail()
-            },
-            type: "POST",
-            success: function() {
-                console.log("Session created successfully");
-                let user = {};
-                user["last_name"] = profile.getFamilyName();
-                user["first_name"] = profile.getName();
-                user["imageUrl"] = profile.getImageUrl();
-                user["primary_email"] = profile.getEmail();
-                this.props.route.user.logIn(user);
+            url: "/v1/user/email/" + profile.getEmail(),
+            type: "GET",
+            success: function(data) {
+                console.log("Profile loaded successfully");
+                $.ajax({
+                    url: "/v1/session/",
+                    data: {
+                        idToken: idToken,
+                        email: profile.getEmail()
+                    },
+                    type: "POST",
+                    success: function() {
+                        console.log("Session created successfully");
+                        let user = {};
+                        user["first_name"] = data.user.first_name;
+                        user["last_name"] = data.user.last_name;
+                        user["username"] = data.user.username;
+                        user["primary_email"] = data.user.primary_email;
+                        user["phone"] = data.user.phone;
+                        user["gender"] = data.user.gender;
+                        user["genderOfWasherPreferences"] = data.user.genderOfWasherPreferences;
+                        user["location"] = data.user.location;
+                        user["imageUrl"] = data.user.imagedUrl;
+                        user["created"] = data.user.created;
+                        user["loadsWished"] = data.user.loadsWished;
+                        user["loadsWashed"] = data.user.loadsWashed;
+                        user["averageWashRating"] = data.user.averageWashRating;
+                        user["bio"] = data.user.bio;
+                        user["admin"] = data.user.admin;
+
+                        this.props.route.user.logIn(user);
+                        // Go to user profile
+                        browserHistory.push("/profile/" + data.user.username);
+                    }.bind(this),
+                    error: function(err) {
+                        alert(err.responseText);
+                    }
+                });
             }.bind(this),
             error: function(err) {
-                alert(err);
+                console.log("Profile not found ... redirecting to registration");
+                browserHistory.push("/register");
             }
         });
     }
