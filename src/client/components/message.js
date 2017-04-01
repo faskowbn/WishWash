@@ -1,10 +1,36 @@
 /**
- * Created by brad on 3/31/2017.
+ * Created by phillyg yo whassuc on 3/31/2017.
  */
+import React from 'react';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import FlatButton from 'material-ui/FlatButton';
+
+const CardExampleExpandable = () => (
+
+  <Card>
+      <CardHeader
+          title="Without Avatar"
+          subtitle="Subtitle"
+          actAsExpander={true}
+          showExpandableButton={true}
+      />
+      <CardActions>
+            <FlatButton label="Action1" />
+            <FlatButton label="Action2" />
+      </CardActions>
+      <CardText expandable={true}>
+            lmao yoooooo whassup bazinga
+      </CardText>
+  </Card>
+);
+
+export default CardExampleExpandable;
+
+
 /*
  import React from 'react';
 
- let Order = React.createClass({
+ let Message = React.createClass({
 
  render() {
  let fulfilledStatus = this.props.order.fulFilled ?
@@ -39,5 +65,5 @@
  }
  });
 
- export default Order;
+ export default Message;
  */
