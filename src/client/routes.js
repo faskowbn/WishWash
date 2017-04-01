@@ -8,6 +8,12 @@ import { render } from 'react-dom'
 import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
 
 import { Landing } from './views/landing'
+import { Profile } from './views/profile'
+import { EditProfile } from './views/editProfile'
+import { MessageBoard } from './views/messageBoard'
+import { Register } from './views/register'
+import { Unauthorized } from './views/unauthorized'
+import { CreateMessage } from './views/createMessage'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -24,41 +30,6 @@ const muiTheme = getMuiTheme({
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.onSuccess = this.onSuccess.bind(this);
-        this.onFailure = this.onFailure.bind(this);
-        this.renderButton = this.renderButton.bind(this);
-        this.signOut = this.signOut.bind(this);
-    }
-
-    onSuccess(googleUser) {
-        let profile = googleUser.getBasicProfile();
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    }
-    onFailure(error) {
-        console.log(error);
-    }
-    renderButton() {
-        window.gapi.signin2.render('my-signin2', {
-            'scope': 'profile email',
-            'width': 240,
-            'height': 50,
-            'longtitle': true,
-            'theme': 'dark',
-            'onsuccess': this.onSuccess,
-            'onfailure': this.onFailure
-        });
-    }
-    signOut() {
-        var auth2 = window.gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-            console.log('User signed out.');
-        });
-    }
-    componentDidMount() {
-        window.addEventListener('google-loaded',this.renderButton);
     }
 
     render() {
@@ -70,17 +41,60 @@ class App extends React.Component {
                 <div className="container">
                     {this.props.children}
                 </div>
-                <div id="my-signin2"></div>
-                <RaisedButton label='Sign Out' onTouchTap={this.signOut.bind(this)}></RaisedButton>
             </div>
         </MuiThemeProvider>);
     }
 }
 
+class User {
+    constructor() {
+        // See if user is in localStorage
+        const data = localStorage.getItem('user');
+        this.data = data ? JSON.parse(data) : {
+            username: "",
+            primary_email: ""
+        };
+    }
+
+    logIn(data) {
+        // Store locally
+        this.data = data;
+        // Store into localStorage
+        localStorage.setItem('user', JSON.stringify(data));
+        // Go to user profile
+        browserHistory.push(`/profile/${data.id}`);
+    }
+
+    //TODO: look at how to do this
+    logOut() {
+        // Remove user info
+        this.data = {
+            username: "",
+            primary_email: ""
+        };
+        // Wipe localStorage
+        localStorage.removeItem('user');
+        // Go to login page
+        browserHistory.push('/login');
+    }
+
+    getUser() {
+        return this.data;
+    }
+}
+
+let user = new User();
+
 let Routes = (
     <Router history={browserHistory}>
         <Route path="/" component={App} >
             <IndexRoute component={Landing} name="landing"/>
+            <Route name="editProfile" path="/profile/edit/:id" component={EditProfile} user={user}/>
+            <Route name="profile" path="/profile/:id" component={Profile} user={user}/>
+            <Route name="messageBoard" path="/messageBoard" component={MessageBoard} user={user}/>
+            <Route name="register" path="/register" component={Register} user={user}/>
+            <Route name="unauthorized" path="/unauthorized" component={Unauthorized} user={user}/>
+            <Route name="createMessage" path="/createMessage" component={CreateMessage} user={user}/>
         </Route>
     </Router>
 );
