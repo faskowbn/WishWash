@@ -11,6 +11,10 @@ import RaisedButton from 'material-ui/RaisedButton'
 export class Landing extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            user: this.props.route.user
+        };
+
         this.onSuccess = this.onSuccess.bind(this);
         this.onFailure = this.onFailure.bind(this);
         this.renderButton = this.renderButton.bind(this);
@@ -22,7 +26,11 @@ export class Landing extends React.Component {
         let idToken = googleUser.getAuthResponse().id_token;
 
         $.ajax({
-            url: "/v1/session/" + idToken,
+            url: "/v1/session/",
+            data: {
+                idToken: idToken,
+                email: profile.getEmail()
+            },
             type: "POST",
             success: function() {
                 console.log("Session created successfully");
@@ -31,8 +39,8 @@ export class Landing extends React.Component {
                 user["first_name"] = profile.getName();
                 user["imageUrl"] = profile.getImageUrl();
                 user["primary_email"] = profile.getEmail();
-                this.props.user.logIn(user);
-            },
+                this.props.route.user.logIn(user);
+            }.bind(this),
             error: function(err) {
                 alert(err);
             }

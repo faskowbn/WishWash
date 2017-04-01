@@ -92,7 +92,7 @@ let user = new User();
 let Routes = (
     <Router history={browserHistory}>
         <Route path="/" component={App} >
-            <IndexRoute component={Landing} name="landing"/>
+            <IndexRoute component={Landing} name="landing" user={user}/>
             <Route name="editProfile" path="/profile/edit/:id" component={EditProfile} user={user}/>
             <Route name="profile" path="/profile/:id" component={Profile} user={user}/>
             <Route name="messageBoard" path="/messageBoard" component={MessageBoard} user={user}/>

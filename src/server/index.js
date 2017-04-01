@@ -66,7 +66,7 @@ app.delete('/v1/wishMessage/:id', wishApi.deleteWishMessage);
 app.get('/v1/wishMessage/:id', wishApi.getWishMessageById);
 
 //login api
-app.post('/v1/session/:token', loginApi.addSession);
+app.post('/v1/session/', loginApi.addSession);
 
 app.get('*', function(req, res) {
     res.render('base', {
