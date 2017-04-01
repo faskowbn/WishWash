@@ -18,7 +18,7 @@ module.exports.getAllMessagesWithFilter = function(req, res) {
     //} else if (!timeRangeHigh) {
     //    res.status(400).send({ error: 'problem parsing time range high' });
     } else {
-        washMessage.find({location: location, status: status}).sort({timeRangeHigh: -1}).limit(500).exec(
+        washMessage.find({availableLocations: location, status: status}).sort({timeRangeHigh: -1}).limit(500).exec(
             function(err, washMessages) {
                 if (err) {
                     res.status(400).send({ error: 'db query problem on washMessages' });
