@@ -19,7 +19,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {deepOrange500} from 'material-ui/styles/colors';
-import RaisedButton from 'material-ui/RaisedButton'
+import RaisedButton from 'material-ui/RaisedButton';
 
 const muiTheme = getMuiTheme({
     palette: {
@@ -51,7 +51,9 @@ class User {
         // See if user is in localStorage
         const data = localStorage.getItem('user');
         this.data = data ? JSON.parse(data) : {
-            username: "",
+            last_name: "",
+            first_name: "",
+            imageUrl: "",
             primary_email: ""
         };
     }
@@ -69,7 +71,9 @@ class User {
     logOut() {
         // Remove user info
         this.data = {
-            username: "",
+            last_name: "",
+            first_name: "",
+            imageUrl: "",
             primary_email: ""
         };
         // Wipe localStorage

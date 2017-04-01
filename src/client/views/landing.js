@@ -6,8 +6,9 @@
 import React from 'react';
 import { Link } from 'react-router';
 import GoogleLogin from 'react-google-login';
+import RaisedButton from 'material-ui/RaisedButton'
 
-class Landing extends React.Component {
+export class Landing extends React.Component {
     constructor(props) {
         super(props);
         this.onSuccess = this.onSuccess.bind(this);
@@ -18,10 +19,24 @@ class Landing extends React.Component {
 
     onSuccess(googleUser) {
         let profile = googleUser.getBasicProfile();
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        let idToken = googleUser.getAuthResponse().id_token;
+
+        $.ajax({
+            url: "/v1/session/" + idToken,
+            type: "POST",
+            success: function() {
+                console.log("Session created successfully");
+                let user = {};
+                user["last_name"] = profile.getFamilyName();
+                user["first_name"] = profile.getName();
+                user["imageUrl"] = profile.getImageUrl();
+                user["primary_email"] = profile.getEmail();
+                this.props.user.logIn(user);
+            },
+            error: function(err) {
+                alert(err);
+            }
+        });
     }
     onFailure(error) {
         console.log(error);
@@ -48,14 +63,9 @@ class Landing extends React.Component {
     }
 
     render() {
+        console.log("sup");
         return (
             <div>
-                <AppBar
-                    title="Mixr"
-                    iconElementLeft={null} />
-                <div className="container">
-                    {this.props.children}
-                </div>
                 <div id="my-signin2"></div>
                 <RaisedButton label='Sign Out' onTouchTap={this.signOut.bind(this)}></RaisedButton>
             </div>

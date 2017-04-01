@@ -18,20 +18,24 @@ let userSchema = new Schema({
     created: { type: Date, default: Date.now() },
     loadsWished: { type: Number, default: 0 },
     loadsWashed: { type: Number, default: 0 },
-    averageWashRating: { type: Number, default: 0 }
+    averageWashRating: { type: Number, default: 0 },
+    bio: {type: String, required: false, default: ''},
+    admin: { type: Boolean, default: false, required: true }
 });
 
 // the schema is useless so far
 // we need to create a model using it
 let User = mongoose.model('User', userSchema);
 
+/*
 User.path('primary_email').validate(function(value) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }, 'Invalid email address');
 
-Users.path('phone').validate(function(value) {
+User.path('phone').validate(function(value) {
     return /\d{3}-\d{3}-\d{4}/.test(value);
 }, 'Invalid phone number');
+*/
 
 // make this available to our users in our Node applications
 module.exports = User;
