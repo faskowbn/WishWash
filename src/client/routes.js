@@ -36,7 +36,7 @@ class App extends React.Component {
         return (<MuiThemeProvider muiTheme={muiTheme}>
             <div>
                 <AppBar
-                    title="Mixr"
+                    title="WishWash - Take a Load Off"
                     iconElementLeft={null} />
                 <div className="container">
                     {this.props.children}
