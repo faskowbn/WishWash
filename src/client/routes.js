@@ -67,11 +67,13 @@ class User {
             bio: "",
             admin: ""
         };
+        this.loggedIn = false;
     }
 
     logIn(data) {
         // Store locally
         this.data = data;
+        this.loggedIn = true;
         // Store into localStorage
         localStorage.setItem('user', JSON.stringify(data));
     }
@@ -87,8 +89,9 @@ class User {
         };
         // Wipe localStorage
         localStorage.removeItem('user');
+        this.loggedIn = false;
         // Go to login page
-        browserHistory.push('/login');
+        browserHistory.push('/');
     }
 
     getUser() {
@@ -98,17 +101,23 @@ class User {
 
 let user = new User();
 
+function requireAuth(nextState, replaceState) {
+    if (!user.loggedIn) {
+        replaceState({ nextPathname: nextState.location.pathname }, '/')
+    }
+}
+
 let Routes = (
     <Router history={browserHistory}>
         <Route path="/" component={App} >
             <IndexRoute component={Landing} name="landing" user={user}/>
-            <Route name="editProfile" path="/profile/edit/:username" component={EditProfile} user={user}/>
-            <Route name="profile" path="/profile/:username" component={Profile} user={user}/>
-            <Route name="messageBoard" path="/messageBoard" component={MessageBoard} user={user}/>
-            <Route name="register" path="/register" component={Register} user={user}/>
-            <Route name="unauthorized" path="/unauthorized" component={Unauthorized} user={user}/>
-            <Route name="createMessage" path="/createMessage" component={CreateMessage} user={user}/>
+            <Route name="editProfile" path="/profile/edit/:username" component={EditProfile} user={user} onEnter = { requireAuth }/>
+            <Route name="profile" path="/profile/:username" component={Profile} user={user} onEnter = { requireAuth } />
+            <Route name="messageBoard" path="/messageBoard" component={MessageBoard} user={user} onEnter = { requireAuth } />
+            <Route name="createMessage" path="/createMessage" component={CreateMessage} user={user} onEnter = { requireAuth } />
         </Route>
+        <Route name="register" path="/register" component={Register} user={user} />
+        <Route name="unauthorized" path="/unauthorized" component={Unauthorized} user={user} />
     </Router>
 );
 
