@@ -23,11 +23,11 @@ import Dialog from 'material-ui/Dialog';
 let user = {
     first_name: "first_name is not set",
     last_name: "last_name is not set",
-    user_name: "user_name is not set",
+    username: "username is not set",
     primary_email: "primary_email is not set",
-    primary_phone: "What's yo number?",
+    phone: "What's yo number?",
     gender: "gender of wisher is not set",
-    genderOfWasher: "gender preferences are not set",
+    genderOfWasherPreferences: "gender preferences are not set",
     location: "location is not set",
     imageUrl: "google image url not set",
     created: "April 2nd, 2017.",
@@ -42,7 +42,7 @@ export class Profile extends React.Component {
     constructor(props) {
         super(props);
 
-        let user = this.props.routes.user.getUser();
+        //let user = this.props.routes.user.getUser();
 
         this.state = {
             otherUser: undefined,
@@ -50,12 +50,38 @@ export class Profile extends React.Component {
             gender: 4,
             genderPreferences: 3,
             location: 1,
-            bio: ""};
+            bio: "",
+            user: undefined};
         this.handlePrimaryPhoneChange = this.handlePrimaryPhoneChange.bind(this);
         this.handleGenderChange = this.handleGenderChange.bind(this);
         this.handleGenderPreferencesChange = this.handleGenderPreferencesChange.bind(this);
         this.handleLocationChange = this.handleLocationChange.bind(this);
         this.handleBioChange = this.handleBioChange.bind(this);
+    }
+
+    handleFieldChange(event, index, value, field) {
+        let user = this.state.user;
+        user['field'] = value;
+        $.ajax({
+            type: 'PUT',
+            url: '/v1/user',
+            data: {
+                first_name: user.first_name,
+                last_name: user.last_name,
+                phone: user.phone,
+                gender: user.gender,
+                genderOfWasherPreferences: user.genderOfWasherPreferences,
+                location: user.location,
+                imageUrl: user.imageUrl,
+                bio: user.bio
+            },
+            success: function (data) {
+                this.setState({user: user});
+            }.bind(this),
+            error: function (err) {
+                alert("could not edit user information)");
+            }
+        }.bind(this))
     }
 
     handlePrimaryPhoneChange(event, value){
@@ -83,6 +109,7 @@ export class Profile extends React.Component {
         this.setState({bio: value});
     }
 
+
     /* setFirstName
      * For users
      */
@@ -101,7 +128,7 @@ export class Profile extends React.Component {
      * For internal use only
      */
     setUsername(newUsername){
-        user.user_name = newUsername;
+        user.username = newUsername;
     }
 
     /* setPrimaryEmail
@@ -129,7 +156,7 @@ export class Profile extends React.Component {
      * For users
      */
     setGenderPreferences(newPreferences){
-        user.genderOfWasher = newPreferences;
+        user.genderOfWasherPreferences = newPreferences;
     }
 
     /* setLocation
@@ -167,35 +194,30 @@ export class Profile extends React.Component {
         user.bio = newBio;
     }
 
-    componentDidMount() {
+    setState(value){
+        let user = this.state.user;
+        user['field'] = value;
+        //This needs to be fixed as a general set statement
+        //Everything else can be deleted (but keep it until this works)
+    }
+
+    componentDidMount(){
         $.ajax({
             type: "GET",
-            url: "/v1/user/username/" + user.user_name,
-            data: {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                user_name: user.user_name,
-                primary_email: user.primary_email,
-                primary_phone: user.primary_phone,
-                gender: user.gender,
-                genderOfWasher: user.genderOfWasher,
-                location: user.location,
-                imageUrl: user.imageUrl,
-                created: user.created,
-                loadsWished: user.loadsWished,
-                loadsWashed: user.loadsWashed,
-                averageWashRating: user.averageWashRating,
-                bio: user.bio
-            },
+            //url: "/v1/user/username/" + user.username,
+            url: "/v1/user/username/zrom",
+            //url: "/v1/user/username/zro"
             success: function(user) {
+                console.log(user);
                 this.setState({
-                    "bio": this.state.bio,
-                    "location": this.state.location,
-                    "phone": this.state.phone,
-                    "gender": this.state.gender,
-                    "genderPreferences": this.state.genderPreferences
-            })
-            },
+                    "bio": user.bio,
+                    "location": user.location,
+                    "phone": user.phone,
+                    "gender": user.gender,
+                    "genderPreferences": user.genderPreferences,
+                    "user": user
+                })
+            }.bind(this),
             error: function(err) {
                 alert("cannot load user");
                 browserHistory.push("/messageBoard")
@@ -207,11 +229,11 @@ export class Profile extends React.Component {
         //render should have an if statement to check if profile is you
         let name = user.first_name + " " + user.last_name;
         let profilePicture = user.imageUrl;
-        let username = "Username:\n" + user.user_name;
+        let username = "Username:\n" + user.username;
         let email1 = "Primary Email:\n" + user.primary_email;
-        let phone1 = user.primary_phone;
+        let phone1 = user.phone;
         let gender = "Gender:\n" + user.gender;
-        let genderPreferences = "Prefered Washer Genders:\n" + user.genderOfWasher;
+        let genderPreferences = "Prefered Washer Genders:\n" + user.genderOfWasherPreferences;
         let location = "Residence Hall:\n" + user.location;
         let dateUserCreated = "Your account was created on\n" + user.created;
         let loadsWished = "Total granted wishes:\n" + user.loadsWished;
@@ -240,64 +262,70 @@ export class Profile extends React.Component {
             margin: '16px 32px 16px 0',
         };
 
-        console.log(this.state.location);
+        let view = this.state.user === undefined ? (<h1>Loading profile...</h1>) :
+            (
+                <div>
+                    <Card>
+                        <CardHeader
+                            title={<h1>{name}</h1>}
+                            subtitle={<h3>{bio}</h3>} //replace with text field
+                            avatar={<Avatar
+                                src = {profilePicture}
+                                size={200}
+                            />}
+                        />
+
+                        <MenuItem primaryText={username}/>
+
+                        <MenuItem primaryText={email1}/>
+
+                        <TextField hintText={phone1} style={{margin: 15, color: '#000000'}} floatingLabelText="Phone Number"
+                                   onChange={this.handleFieldChange}/>
+                        <br />
+
+                        <label style={{margin: 15, color: '#000000', display: 'inline-block'}}>Residence Hall</label><br />
+                        <DropDownMenu value={this.state.user.location} onChange={this.handleFieldChange}>
+                            <MenuItem value={1} primaryText="Branscomb" />
+                            <MenuItem value={2} primaryText="Commons" />
+                            <MenuItem value={3} primaryText="Towers" />
+                            <MenuItem value={4} primaryText="Kissam" />
+                            <MenuItem value={5} primaryText="Blakemore" />
+                        </DropDownMenu>
+                        <br />
+                        <br />
+
+                        <label style={{margin: 15, color:'#000000'}}>Gender</label><br />
+                        <DropDownMenu value={this.state.user.gender} onChange={this.handleFieldChange}>
+                            <MenuItem value={1} primaryText="Male" />
+                            <MenuItem value={2} primaryText="Female" />
+                            <MenuItem value={3} primaryText="Non-Binary" />
+                            <MenuItem value={4} primaryText="Other" />
+                        </DropDownMenu>
+                        <br />
+                        <br />
+
+                        <label style={{margin: 15, color:'#000000'}}>Gender Preference</label><br />
+                        <DropDownMenu value={this.state.user.genderPreferences} onChange={this.handleFieldsChange}>
+                            <MenuItem value={1} primaryText="Male" />
+                            <MenuItem value={2} primaryText="Female" />
+                            <MenuItem value={3} primaryText="No Preference" />
+                        </DropDownMenu>
+                        <br />
+                        <br />
+
+                        <MenuItem primaryText={loadsWished}/>
+
+                        <MenuItem primaryText={loadsWashed}/>
+
+                        <MenuItem primaryText={dateUserCreated}/>
+
+                    </Card>
+                </div>
+            );
+
         return (
             <div>
-                <Card>
-                    <CardHeader
-                        title={<h1>{name}</h1>}
-                        subtitle={<h3>{bio}</h3>} //replace with text field
-                        avatar={<Avatar
-                            src = {profilePicture}
-                            size={200}
-                        />}
-                    />
-
-                    <MenuItem primaryText={username}/>
-
-                    <MenuItem primaryText={email1}/>
-
-                    <TextField hintText={phone1} style={{margin: 15, color: '#000000'}} floatingLabelText="Phone Number"
-                               onChange={this.handlePrimaryPhoneChange}/>
-                    <br />
-
-                    <label style={{margin: 15, color: '#000000', display: 'inline-block'}}>Residence Hall</label><br />
-                    <DropDownMenu value={this.state.location} onChange={this.handleLocationChange}>
-                        <MenuItem value={1} primaryText="Branscomb" />
-                        <MenuItem value={2} primaryText="Commons" />
-                        <MenuItem value={3} primaryText="Towers" />
-                        <MenuItem value={4} primaryText="Kissam" />
-                        <MenuItem value={5} primaryText="Blakemore" />
-                    </DropDownMenu>
-                    <br />
-                    <br />
-
-                    <label style={{margin: 15, color:'#000000'}}>Gender</label><br />
-                    <DropDownMenu value={this.state.gender} onChange={this.handleGenderChange}>
-                        <MenuItem value={1} primaryText="Male" />
-                        <MenuItem value={2} primaryText="Female" />
-                        <MenuItem value={3} primaryText="Non-Binary" />
-                        <MenuItem value={4} primaryText="Other" />
-                    </DropDownMenu>
-                    <br />
-                    <br />
-
-                    <label style={{margin: 15, color:'#000000'}}>Gender Preference</label><br />
-                    <DropDownMenu value={this.state.genderPreferences} onChange={this.handleGenderPreferencesChange}>
-                        <MenuItem value={1} primaryText="Male" />
-                        <MenuItem value={2} primaryText="Female" />
-                        <MenuItem value={3} primaryText="No Preference" />
-                    </DropDownMenu>
-                    <br />
-                    <br />
-
-                    <MenuItem primaryText={loadsWished}/>
-
-                    <MenuItem primaryText={loadsWashed}/>
-
-                    <MenuItem primaryText={dateUserCreated}/>
-
-                </Card>
+                {view}
             </div>
         );
     }
