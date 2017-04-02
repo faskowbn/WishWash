@@ -205,6 +205,101 @@ export class Profile extends React.Component {
         super(props);
     }
 
+    componentDidMount() {
+        /*
+        $.ajax({
+            url: "/v1/user/username/hey",
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+        $.ajax({
+            url: "/v1/filter/messages/location/branscomb",
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+        $.ajax({
+            url: "/v1/washMessage/1234",
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+        $.ajax({
+            url: "/v1/user/username/1234",
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+        $.ajax({
+            url: "/v1/wishMessage/1234",
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+        $.ajax({
+            url: "/v1/user/id/58dfed25057dd41df484d0d7",
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+        $.ajax({
+            url: "/v1/user/username/zromi",
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+        $.ajax({
+            url: "/v1/wishMessage/58dfffc3881c1b0fdcd88be3",
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+        $.ajax({
+            url: "/v1/user/email/zrom@vanderbilt.edu",
+            type: "GET",
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(err) {
+                console.log(err.responseText);
+            }
+        });
+        */
+    }
+
     render() {
         return (
             <div>

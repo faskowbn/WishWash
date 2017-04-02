@@ -29,6 +29,8 @@ export class Landing extends React.Component {
             type: "GET",
             success: function(data) {
                 console.log("Profile loaded successfully");
+                console.log(idToken);
+                console.log(profile.getEmail());
                 $.ajax({
                     url: "/v1/session/",
                     data: {
@@ -95,7 +97,6 @@ export class Landing extends React.Component {
     }
 
     render() {
-        console.log("sup");
         return (
             <div>
                 <div id="my-signin2"></div>

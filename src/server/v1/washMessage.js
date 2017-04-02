@@ -54,7 +54,6 @@ module.exports.createWashMessage = function(req, res) {
 };
 
 module.exports.deleteWashMessage = function(req, res) {
-    //TODO: add support for you're own
     /*
     washMessage.remove({'_id': req.params.id}, function(err) {
         if (err) {
@@ -64,14 +63,21 @@ module.exports.deleteWashMessage = function(req, res) {
         }
     });
     */
-
-    washMessage.update({'_id': req.params.id}, {$set: {status: "inactive"}}, function(err, washMessage) {
+    User.findOne({"primary_email": req.body.email}, function(err, user) {
         if (err) {
-            res.status(404).send({ error: 'db query problem with order' });
-        } else if (washMessage.nModified === 0) {
-            res.status(404).send({ error: 'wash Message could not be deleted' });
+            res.status(400).send({ error: 'error when querying database' });
+        } else if (!user) {
+            res.status(404).send({error: 'Email with session not found'});
         } else {
-            res.status(200).send({success: 'status set as inactive'});
+            washMessage.update({'_id': req.params.id}, {$set: {status: "inactive"}}, function(err, washMessage) {
+                if (err) {
+                    res.status(404).send({ error: 'db query problem with order' });
+                } else if (washMessage.nModified === 0) {
+                    res.status(404).send({ error: 'wash Message could not be deleted' });
+                } else {
+                    res.status(200).send({success: 'status set as inactive'});
+                }
+            });
         }
     });
 };

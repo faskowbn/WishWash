@@ -71,14 +71,21 @@ module.exports.deleteWishMessage = function(req, res) {
         }
     });
     */
-    wishMessage.update({'_id': req.params.id}, {$set: {status: "inactive"}}, function(err, user) {
+    User.findOne({"primary_email": req.body.email}, function(err, user) {
         if (err) {
-            console.log(err);
-            res.status(404).send({ error: 'db query problem with order' });
-        } else if (washMessage.nModified === 0) {
-            res.status(404).send({ error: 'user DNE' });
+            res.status(400).send({error: 'error when querying database'});
+        } else if (!user) {
+            res.status(404).send({error: 'Email with session not found'});
         } else {
-            res.status(200).send({success: 'user edited'});
+            wishMessage.update({'_id': req.params.id}, {$set: {status: "inactive"}}, function (err, user) {
+                if (err) {
+                    res.status(404).send({error: 'db query problem with order'});
+                } else if (washMessage.nModified === 0) {
+                    res.status(404).send({error: 'user DNE'});
+                } else {
+                    res.status(200).send({success: 'user edited'});
+                }
+            });
         }
     });
 };

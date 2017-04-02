@@ -14,7 +14,6 @@ let path     = require('path'),
     washMessage     = require(path.join(__dirname, '../models/washMessage.js')),
     wishMessage    = require(path.join(__dirname, '../models/wishMessage.js'));
 
-
 module.exports.createUser = function(req, res) {
     let data = req.body;
     if (!data ||
@@ -76,85 +75,122 @@ module.exports.editUser = function(req, res) {
     let data = req.body;
     if (!data) {
         res.status(400).send({error: 'No body when editting user'});
-    //} else if (!req.session.token) { //TODO: make sure the token is something
-    //    res.status(400).send({error: 'You are not allowed to edit this user'})
     } else {
-        let toChange = {};
-        let data = req.body;
+        User.findOne({"primary_email": req.session.email}, function(err, user) {
+            if (err) {
+                res.status(400).send({ error: 'error when querying database' });
+            } else if (!user) {
+                res.status(404).send({error: 'Session not found.  Please log in.'});
+            } else {
+                let toChange = {};
+                let data = req.body;
 
-        //boiler plate
-        if (data.first_name !== undefined) {
-            toChange.first_name = data.first_name;
-        }
-
-        if (data.last_name !== undefined) {
-            toChange.last_name = data.last_name;
-        }
-
-        if (data.phone !== undefined) {
-            toChange.phone = data.phone;
-        }
-
-        if (data.gender !== undefined) {
-            toChange.gender = data.gender;
-        }
-
-        if (data.genderOfWasherPreferences !== undefined) {
-            toChange.genderOfWasherPreferences = data.genderOfWasherPreferences;
-        }
-
-        if (data.imageUrl !== undefined) {
-            toChange.imageUrl = data.imageUrl;
-        }
-
-        if (data.bio !== undefined) {
-            toChange.bio = data.bio;
-        }
-
-        if (!_.isEmpty(toChange)) {
-            //TODO: stop using username ... add sessions
-            User.update({'username': req.body.username}, {$set: toChange}, function(err, user) {
-                if (err) {
-                    res.status(404).send({ error: 'db query problem with order' });
-                } else if (!user) {
-                    res.status(404).send({ error: 'user DNE' });
-                } else {
-                    res.status(200).send({success: 'user edited'});
+                //boiler plate
+                if (data.first_name !== undefined) {
+                    toChange.first_name = data.first_name;
                 }
-            });
-        } else {
-            res.status(404).send({ error: 'sent in empty toChange' });
-        }
+
+                if (data.last_name !== undefined) {
+                    toChange.last_name = data.last_name;
+                }
+
+                if (data.phone !== undefined) {
+                    toChange.phone = data.phone;
+                }
+
+                if (data.gender !== undefined) {
+                    toChange.gender = data.gender;
+                }
+
+                if (data.genderOfWasherPreferences !== undefined) {
+                    toChange.genderOfWasherPreferences = data.genderOfWasherPreferences;
+                }
+
+                if (data.imageUrl !== undefined) {
+                    toChange.imageUrl = data.imageUrl;
+                }
+
+                if (data.bio !== undefined) {
+                    toChange.bio = data.bio;
+                }
+
+                if (!_.isEmpty(toChange)) {
+                    //TODO: stop using username ... add sessions
+                    User.update({'username': req.body.username}, {$set: toChange}, function(err, user) {
+                        if (err) {
+                            res.status(404).send({ error: 'db query problem with order' });
+                        } else if (!user) {
+                            res.status(404).send({ error: 'user DNE' });
+                        } else {
+                            res.status(200).send({success: 'user edited'});
+                        }
+                    });
+                } else {
+                    res.status(404).send({ error: 'sent in empty toChange' });
+                }
+            }
+        });
     }
 };
 
 module.exports.getUserByUsername = function(req, res) {
-    //if (session support)
-    User.findOne({"username": req.params.username}, function(err, user) {
+    User.findOne({"primary_email": req.session.email}, function(err, sessionUser) {
         if (err) {
             res.status(400).send({ error: 'error when querying database' });
-        } else if (!user) {
-            res.status(404).send({error: 'profile not found'});
         } else {
-            res.status(200).send({
-                user: user
+            User.findOne({"username": req.params.username}, function(err, user) {
+                if (err) {
+                    res.status(400).send({ error: 'error when querying database' });
+                } else if (!user) {
+                    res.status(404).send({error: 'profile not found'});
+                } else {
+                    //if not your email on session, then
+                    if (!sessionUser) {
+                        let otherUser = _.pick(user, ['first_name', 'last_name', 'username', 'primary_email', 'phone',
+                                                      'gender', 'location', 'imageUrl', 'created', 'loadsWished',
+                                                       'loadsWashed', 'averageWashRating', 'bio']);
+                        res.status(200).send({
+                            user: otherUser
+                        });
+                    } else {
+                        res.status(200).send({
+                            user: user
+                        });
+                    }
+                }
             });
         }
-    });
+    })
 };
 
 module.exports.getUserById = function(req, res) {
-    User.findOne({"_id": req.params.id}, function(err, user) {
+    User.findOne({"primary_email": req.session.email}, function(err, sessionUser) {
         if (err) {
             res.status(400).send({ error: 'error when querying database' });
-        } else if (!user) {
-            res.status(404).send({error: 'profile not found'});
         } else {
-            res.status(200).send({
-                user: user
+            User.findOne({"_id": req.params.id}, function(err, user) {
+                if (err) {
+                    res.status(400).send({ error: 'error when querying database' });
+                } else if (!user) {
+                    res.status(404).send({error: 'profile not found'});
+                } else {
+                    //if not your email on session, then
+                    if (!sessionUser) {
+                        let otherUser = _.pick(user, ['first_name', 'last_name', 'username', 'primary_email', 'phone',
+                            'gender', 'location', 'imageUrl', 'created', 'loadsWished',
+                            'loadsWashed', 'averageWashRating', 'bio']);
+                        res.status(200).send({
+                            user: otherUser
+                        });
+                    } else {
+                        res.status(200).send({
+                            user: user
+                        });
+                    }
+                }
             });
         }
-    });
+    })
 };
 
 module.exports.getUserByEmail = function(req, res) {
@@ -164,12 +200,22 @@ module.exports.getUserByEmail = function(req, res) {
         } else if (!user) {
             res.status(404).send({error: 'profile not found'});
         } else {
-            res.status(200).send({
-                user: user
-            });
+            if (req.params.email !== req.session.email) {
+                let otherUser = _.pick(user, ['first_name', 'last_name', 'username', 'primary_email', 'phone',
+                    'gender', 'location', 'imageUrl', 'created', 'loadsWished',
+                    'loadsWashed', 'averageWashRating', 'bio']);
+                res.status(200).send({
+                    user: otherUser
+                });
+            } else {
+                res.status(200).send({
+                    user: user
+                });
+            }
         }
     });
 }
+
 //later
 //getAllWashMessagesByUser
 //getAllWishMessagesByUser
