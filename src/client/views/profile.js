@@ -166,14 +166,42 @@ export class Profile extends React.Component {
     setBio(newBio){
         user.bio = newBio;
     }
-    //componentDidMount() {
-    //if user is you
-    //then use this.props.user
-    //else
-    //issue an ajax call
-    //on succcess for the ajax call
-    //user this.setState({user: data})
-    //}
+
+    componentDidMount() {
+        $.ajax({
+            type: "GET",
+            url: "/v1/user/username/" + user.user_name,
+            data: {
+                first_name: user.first_name,
+                last_name: user.last_name,
+                user_name: user.user_name,
+                primary_email: user.primary_email,
+                primary_phone: user.primary_phone,
+                gender: user.gender,
+                genderOfWasher: user.genderOfWasher,
+                location: user.location,
+                imageUrl: user.imageUrl,
+                created: user.created,
+                loadsWished: user.loadsWished,
+                loadsWashed: user.loadsWashed,
+                averageWashRating: user.averageWashRating,
+                bio: user.bio
+            },
+            success: function(user) {
+                this.setState({
+                    "bio": this.state.bio,
+                    "location": this.state.location,
+                    "phone": this.state.phone,
+                    "gender": this.state.gender,
+                    "genderPreferences": this.state.genderPreferences
+            })
+            },
+            error: function(err) {
+                alert("cannot load user");
+                browserHistory.push("/messageBoard")
+            }
+        })
+    }
 
     render() {
         //render should have an if statement to check if profile is you
