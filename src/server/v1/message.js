@@ -31,7 +31,6 @@ module.exports.getAllMessagesWithFilter = function(req, res) {
                         if (err) {
                             res.status(400).send({error: 'db query problem on washMessages'});
                         } else {
-                            console.log(washMessages);
                             for (let i in washMessages) {
                                 messages.push(washMessages[i])
                             }
@@ -40,14 +39,10 @@ module.exports.getAllMessagesWithFilter = function(req, res) {
                                     if (err) {
                                         res.status(400).send({error: 'db query problem on wishMessages'});
                                     } else {
-                                        console.log(wishMessages);
                                         for (let i in wishMessages) {
-                                            if (user.gender && wishMessages && wishMessages.gendersAccepted) {
-                                                if (user.gender in wishMessages.gendersAccepted) {
-                                                    messages.push(wishMessages[i]);
-                                                } else if (_.isEmpty(wishMessages.gendersAccepted)) {
-                                                    messages.push(wishMessages[i]);
-                                                }
+                                            if (_.isEmpty(wishMessages[i].gendersAccepted) ||
+                                                _.includes(wishMessages[i].gendersAccepted, user.gender)) {
+                                                messages.push(wishMessages[i]);
                                             }
                                         }
                                         res.status(200).send({messages: messages})

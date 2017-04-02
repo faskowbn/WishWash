@@ -43,7 +43,8 @@ module.exports.createWishMessage = function(req, res) {
                     comments: data.comments,
                     workAmount: data.workAmount,
                     status: "open",
-                    suggestedPrice: data.suggestedPrice
+                    suggestedPrice: data.suggestedPrice,
+                    gendersAccepted: data.gendersAccepted
                 });
 
                 newWishMessage.save(function (err) {
@@ -62,16 +63,7 @@ module.exports.createWishMessage = function(req, res) {
 
 module.exports.deleteWishMessage = function(req, res) {
     //TODO: add support for you're own
-    /*
-    wishMessage.remove({'_id': req.params.id}, function(err) {
-        if (err) {
-            res.status(404).send({ error: 'db problem deleting wash messaage' });
-        } else {
-            res.status(200).send({ success: 'wash message deleted' });
-        }
-    });
-    */
-    User.findOne({"primary_email": req.body.email}, function(err, user) {
+    User.findOne({"primary_email": req.session.email}, function(err, user) {
         if (err) {
             res.status(400).send({error: 'error when querying database'});
         } else if (!user) {
@@ -83,7 +75,9 @@ module.exports.deleteWishMessage = function(req, res) {
                 } else if (washMessage.nModified === 0) {
                     res.status(404).send({error: 'user DNE'});
                 } else {
-                    res.status(200).send({success: 'user edited'});
+                    res.status(200).send({
+                        washMessage: washMessage
+                    });
                 }
             });
         }

@@ -63,7 +63,7 @@ module.exports.deleteWashMessage = function(req, res) {
         }
     });
     */
-    User.findOne({"primary_email": req.body.email}, function(err, user) {
+    User.findOne({"primary_email": req.session.email}, function(err, user) {
         if (err) {
             res.status(400).send({ error: 'error when querying database' });
         } else if (!user) {
