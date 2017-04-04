@@ -24,7 +24,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 const muiTheme = getMuiTheme({
     palette: {
         accent1Color: deepOrange500,
-    },
+    }
 });
 
 class App extends React.Component {
@@ -113,11 +113,11 @@ let Routes = (
             <IndexRoute component={Landing} name="landing" user={user}/>
             <Route name="editProfile" path="/profile/edit/:username" component={EditProfile} user={user} onEnter = { requireAuth }/>
             <Route name="profile" path="/profile/:username" component={Profile} user={user} onEnter = { requireAuth } />
-            <Route name="messageBoard" path="/messageBoard" component={MessageBoard} user={user} onEnter = { requireAuth } />
-            <Route name="createMessage" path="/createMessage" component={CreateMessage} user={user} onEnter = { requireAuth } />
+            <Route name="messageBoard" path="/messageBoard" component={MessageBoard} user={user} />
+            <Route name="createMessage" path="/createMessage" component={CreateMessage} user={user}  />
+            <Route name="register" path="/register" component={Register} user={user} />
+            <Route name="unauthorized" path="/unauthorized" component={Unauthorized} user={user} />
         </Route>
-        <Route name="register" path="/register" component={Register} user={user} />
-        <Route name="unauthorized" path="/unauthorized" component={Unauthorized} user={user} />
     </Router>
 );
 

@@ -15,7 +15,7 @@ import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import {WashMessage} from './washMessage'
 import {WishMessage} from './wishMessage'
-import 'typeface-Roboto';
+//import 'typeface-Roboto';
 /*
 TODO location
 TODO timeRange
@@ -35,7 +35,7 @@ How to differentiate the wisher and washer messages?
  const pStyle={
    fontSize: 16,
    color: '#333',
-   fontFamily: 'Roboto, sans-serif',
+   //fontFamily: 'Roboto, sans-serif',
    lineHeight: 0.3,
  }
 

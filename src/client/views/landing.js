@@ -70,7 +70,6 @@ export class Landing extends React.Component {
             error: function(err) {
                 console.log("Profile not found ... redirecting to registration");
                 localStorage.setItem('email', profile.getEmail());
-                console.log(localStorage.getItem('email'));
                 browserHistory.push("/register");
             }
         });

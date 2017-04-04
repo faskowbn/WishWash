@@ -14,7 +14,7 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
-import 'typeface-Roboto';
+//import 'typeface-Roboto';
 /*
 TODO location
 TODO timeRange
@@ -64,7 +64,7 @@ let message = {
 const pStyle={
   fontSize: 16,
   color: '#333',
-  fontFamily: 'Roboto, sans-serif',
+  //fontFamily: 'Roboto, sans-serif',
   lineHeight: 0.3,
 }
 

@@ -19,24 +19,7 @@ import SelectField from 'material-ui/SelectField'
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import Dialog from 'material-ui/Dialog';
-
-let user = {
-    first_name: "first_name is not set",
-    last_name: "last_name is not set",
-    username: "username is not set",
-    primary_email: "primary_email is not set",
-    phone: "What's yo number?",
-    gender: "gender of wisher is not set",
-    genderOfWasherPreferences: "gender preferences are not set",
-    location: "location is not set",
-    imageUrl: "google image url not set",
-    created: "April 2nd, 2017.",
-    loadsWished: 0,
-    loadsWashed: 0,
-    averageWashRating: -1,
-    bio: "Describe yourself - Tell us why you're here!"
-    //For seeing other user (visibility): everything is available except genderOfWasher
-}
+import {browserHistory} from 'react-router';
 
 export class Profile extends React.Component {
     constructor(props) {
@@ -45,35 +28,33 @@ export class Profile extends React.Component {
         //let user = this.props.routes.user.getUser();
 
         this.state = {
-            otherUser: undefined,
-            phone: 123456789,
-            gender: 4,
-            genderPreferences: 3,
-            location: 1,
-            bio: "",
-            user: undefined};
+            user: undefined
+        };
+        this.handleFieldChange = this.handleFieldChange.bind(this)
+        /*
         this.handlePrimaryPhoneChange = this.handlePrimaryPhoneChange.bind(this);
         this.handleGenderChange = this.handleGenderChange.bind(this);
         this.handleGenderPreferencesChange = this.handleGenderPreferencesChange.bind(this);
         this.handleLocationChange = this.handleLocationChange.bind(this);
         this.handleBioChange = this.handleBioChange.bind(this);
+        */
     }
 
     handleFieldChange(event, index, value, field) {
         let user = this.state.user;
-        user['field'] = value;
+        user[field] = value;
         $.ajax({
             type: 'PUT',
             url: '/v1/user',
             data: {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                phone: user.phone,
-                gender: user.gender,
-                genderOfWasherPreferences: user.genderOfWasherPreferences,
-                location: user.location,
-                imageUrl: user.imageUrl,
-                bio: user.bio
+                first_name: this.state.user.first_name,
+                last_name: this.state.user.last_name,
+                phone: this.state.user.phone,
+                gender: this.state.user.gender,
+                genderOfWasherPreferences: this.state.user.genderOfWasherPreferences,
+                location: this.state.user.location,
+                imageUrl: this.state.user.imageUrl,
+                bio: this.state.user.bio
             },
             success: function (data) {
                 this.setState({user: user});
@@ -84,128 +65,11 @@ export class Profile extends React.Component {
         }.bind(this))
     }
 
-    handlePrimaryPhoneChange(event, value){
-        this.setPrimaryPhone(value);
-        this.setState({phone: value});
-    }
-
-    handleGenderChange(event, index, value){
-        this.setGender(value);
-        this.setState({gender: value});
-    }
-
-    handleGenderPreferencesChange(event, index, value){
-        this.setGenderPreferences(value);
-        this.setState({genderPreferences: value});
-    }
-
-    handleLocationChange(event, index, value){
-        this.setLocation(value);
-        this.setState({location: value});
-    }
-
-    handleBioChange(event, value){
-        this.setBio(value);
-        this.setState({bio: value});
-    }
-
-
-    /* setFirstName
-     * For users
-     */
-    setFirstName(newFirst){
-        user.first_name = newFirst;
-    }
-
-    /* setLastName
-     * For users
-     */
-    setLastName(newLast){
-        user.last_name = newLast;
-    }
-
-    /* setUsername
-     * For internal use only
-     */
-    setUsername(newUsername){
-        user.username = newUsername;
-    }
-
-    /* setPrimaryEmail
-     * For internal use only
-     */
-    setPrimaryEmail(newEmail){
-        user.email1 = newEmail;
-    }
-
-    /* setPrimaryPhone
-     * For users
-     */
-    setPrimaryPhone(newPhone){
-        user.phone1 = newPhone;
-    }
-
-    /* setGender
-     * For users
-     */
-    setGender(newGender){
-        user.gender = newGender;
-    }
-
-    /* setGenderPreferences
-     * For users
-     */
-    setGenderPreferences(newPreferences){
-        user.genderOfWasherPreferences = newPreferences;
-    }
-
-    /* setLocation
-     * For users
-     */
-    setLocation(newLocation){
-        user.location = newLocation;
-    }
-
-    /* setLoadsWished
-     * For internal use only
-     */
-    setLoadsWished(newWishCount){
-        user.loadsWished = newWishCount;
-    }
-
-    /* setLoadsWashed
-     * For internal use only
-     */
-    setLoadsWashed(newWashCount){
-        user.loadsWashed = newWashCount;
-    }
-
-    /* setAWR
-     * For internal use only
-     */
-    setAWR(newRating){
-        user.averageWashRating = newRating;
-    }
-
-    /* setBio
-     * For users
-     */
-    setBio(newBio){
-        user.bio = newBio;
-    }
-
-    setState(value){
-        let user = this.state.user;
-        user['field'] = value;
-        //This needs to be fixed as a general set statement
-        //Everything else can be deleted (but keep it until this works)
-    }
-
     componentDidMount(){
         $.ajax({
             type: "GET",
             //url: "/v1/user/username/" + user.username,
-            url: "/v1/user/username/zrom",
+            url: "/v1/user/username/" + this.props.route.user.data.username,
             //url: "/v1/user/username/zro"
             success: function(user) {
                 console.log(user);
@@ -226,24 +90,6 @@ export class Profile extends React.Component {
     }
 
     render() {
-        //render should have an if statement to check if profile is you
-        let name = user.first_name + " " + user.last_name;
-        let profilePicture = user.imageUrl;
-        let username = "Username:\n" + user.username;
-        let email1 = "Primary Email:\n" + user.primary_email;
-        let phone1 = user.phone;
-        let gender = "Gender:\n" + user.gender;
-        let genderPreferences = "Prefered Washer Genders:\n" + user.genderOfWasherPreferences;
-        let location = "Residence Hall:\n" + user.location;
-        let dateUserCreated = "Your account was created on\n" + user.created;
-        let loadsWished = "Total granted wishes:\n" + user.loadsWished;
-        let loadsWashed = "Total wishes washed:\n" + user.loadsWashed;
-        let averageWashRating = user.averageWashRating;
-        let bio = user.bio;
-        let grayStar = "https://i.imgur.com/wGvUNJ6.png";
-        let yellowStar = "https://i.imgur.com/kc8B7i7.png";
-        let halfStar = "https://i.imgur.com/T2UYRwF.png";
-
         /* getStars
          * returns pictures of 0 to 5 stars, else shows nothing.
          * */
@@ -257,13 +103,36 @@ export class Profile extends React.Component {
             }
         }
 
-        const style = {
-            display: 'inline-block',
-            margin: '16px 32px 16px 0',
-        };
+        let view;
+        if (this.state.user === undefined)  {
+            return (<div>
+                <h1>Loading profile...</h1>
+                </div>);
+        } else {
+            //render should have an if statement to check if profile is you
+            let name = this.state.user.user.first_name + " " + this.state.user.user.last_name;
+            let profilePicture = this.state.user.user.imageUrl;
+            let username = "Username:\n" + this.state.user.user.username;
+            let email1 = "Primary Email:\n" + this.state.user.user.primary_email;
+            let phone1 = this.state.user.user.phone;
+            let gender = "Gender:\n" + this.state.user.user.gender;
+            let genderPreferences = "Prefered Washer Genders:\n" + this.state.user.user.genderOfWasherPreferences;
+            let location = "Residence Hall:\n" + this.state.user.user.location;
+            let dateUserCreated = "Your account was created on\n" + this.state.user.user.created;
+            let loadsWished = "Total granted wishes:\n" + this.state.user.user.loadsWished;
+            let loadsWashed = "Total wishes washed:\n" + this.state.user.user.loadsWashed;
+            let averageWashRating = this.state.user.user.averageWashRating;
+            let bio = this.state.user.user.bio;
+            let grayStar = "https://i.imgur.com/wGvUNJ6.png";
+            let yellowStar = "https://i.imgur.com/kc8B7i7.png";
+            let halfStar = "https://i.imgur.com/T2UYRwF.png";
 
-        let view = this.state.user === undefined ? (<h1>Loading profile...</h1>) :
-            (
+            const style = {
+                display: 'inline-block',
+                margin: '16px 32px 16px 0',
+            };
+
+            view = (
                 <div>
                     <Card>
                         <CardHeader
@@ -322,6 +191,8 @@ export class Profile extends React.Component {
                     </Card>
                 </div>
             );
+
+        }
 
         return (
             <div>

@@ -16,7 +16,9 @@ let path     = require('path'),
 
 module.exports.createUser = function(req, res) {
     let data = req.body;
-    if (!data ||
+    if (!data.primary_email) {
+        res.status(400).send({error: 'Login with google again!'})
+    } else if (!data ||
         !data.first_name ||
         !data.last_name ||
         !data.username ||
