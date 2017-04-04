@@ -14,6 +14,8 @@ import { MessageBoard } from './views/messageBoard'
 import { Register } from './views/register'
 import { Unauthorized } from './views/unauthorized'
 import { CreateMessage } from './views/createMessage'
+import { Login } from './components/login'
+import { LoggedIn } from './components/loggedIn'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -26,25 +28,6 @@ const muiTheme = getMuiTheme({
         accent1Color: deepOrange500,
     }
 });
-
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (<MuiThemeProvider muiTheme={muiTheme}>
-            <div>
-                <AppBar
-                    title="WishWash - Take a Load Off"
-                    iconElementLeft={null} />
-                <div className="container">
-                    {this.props.children}
-                </div>
-            </div>
-        </MuiThemeProvider>);
-    }
-}
 
 class User {
     constructor() {
@@ -101,6 +84,26 @@ class User {
 
 let user = new User();
 
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (<MuiThemeProvider muiTheme={muiTheme}>
+            <div>
+                <AppBar
+                    title="WishWash - Take a Load Off"
+                    iconElementLeft={this.props.route.user.loggedIn ?
+                        <LoggedIn user={this.props.route.user} /> : <Login user={this.props.route.user} />} />
+                <div className="container">
+                    {this.props.children}
+                </div>
+            </div>
+        </MuiThemeProvider>);
+    }
+}
+
 function requireAuth(nextState, replaceState) {
     if (!user.loggedIn) {
         replaceState({ nextPathname: nextState.location.pathname }, '/')
@@ -109,12 +112,12 @@ function requireAuth(nextState, replaceState) {
 
 let Routes = (
     <Router history={browserHistory}>
-        <Route path="/" component={App} >
+        <Route path="/" component={App} user={user}>
             <IndexRoute component={Landing} name="landing" user={user}/>
             <Route name="editProfile" path="/profile/edit/:username" component={EditProfile} user={user} onEnter = { requireAuth }/>
             <Route name="profile" path="/profile/:username" component={Profile} user={user} onEnter = { requireAuth } />
-            <Route name="messageBoard" path="/messageBoard" component={MessageBoard} user={user} />
-            <Route name="createMessage" path="/createMessage" component={CreateMessage} user={user}  />
+            <Route name="messageBoard" path="/messageBoard" component={MessageBoard} user={user} onEnter = { requireAuth } />
+            <Route name="createMessage" path="/createMessage" component={CreateMessage} user={user}  onEnter = { requireAuth } />
             <Route name="register" path="/register" component={Register} user={user} />
             <Route name="unauthorized" path="/unauthorized" component={Unauthorized} user={user} />
         </Route>

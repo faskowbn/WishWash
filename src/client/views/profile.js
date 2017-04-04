@@ -72,7 +72,6 @@ export class Profile extends React.Component {
             url: "/v1/user/username/" + this.props.route.user.data.username,
             //url: "/v1/user/username/zro"
             success: function(user) {
-                console.log(user);
                 this.setState({
                     "bio": user.bio,
                     "location": user.location,
