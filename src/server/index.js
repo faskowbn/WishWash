@@ -51,7 +51,7 @@ app.get('/v1/filter/messages/location/:location', messageApi.getAllMessagesWithF
 
 ///user api
 app.post('/v1/user', userApi.createUser);
-app.put('/v1/user', userApi.editUser);
+app.put('/v1/user', userApi.editUser); //TODO: make it by id /v1/uer/id/:id
 app.get('/v1/user/id/:id', userApi.getUserById);
 app.get('/v1/user/username/:username', userApi.getUserByUsername);
 app.get('/v1/user/email/:email', userApi.getUserByEmail);

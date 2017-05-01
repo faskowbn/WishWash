@@ -37,9 +37,12 @@ export class LoggedIn extends React.Component {
             console.log('User signed out.');
             browserHistory.push("/");
         }.bind(this));
+        $("#my-signin2").css("display", "block");
     }
 
     render() {
+        $("#my-signin2").css("display", "none") //so the google button does not show up anymore
+
         return (
             <div>
                 <IconMenu

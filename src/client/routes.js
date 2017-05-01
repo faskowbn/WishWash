@@ -89,13 +89,19 @@ class App extends React.Component {
         super(props);
     }
 
+    //https://github.com/google/google-api-javascript-client/issues/281
+    //issue fix for log in button not showing up TODO
     render() {
         return (<MuiThemeProvider muiTheme={muiTheme}>
             <div>
                 <AppBar
                     title="WishWash - Take a Load Off"
-                    iconElementLeft={this.props.route.user.loggedIn ?
-                        <LoggedIn user={this.props.route.user} /> : <Login user={this.props.route.user} />} />
+                    iconElementLeft={
+                        <div>
+                            <div id="my-signin2" style={{display: "block"}}></div>
+                            {this.props.route.user.loggedIn ?
+                            <LoggedIn user={this.props.route.user} /> : <Login user={this.props.route.user} />}
+                        </div>} />
                 <div className="container">
                     {this.props.children}
                 </div>

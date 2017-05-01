@@ -184,7 +184,7 @@ export class Register extends React.Component {
 
         return (
             <div>
-                <Card style={{width:'50%'}}>
+                <Card style={{width:'50%', margin: "0 auto"}}>
                     <paper style={{textAlign:'center'}}>
                         {header}
                         <TextField style={style} hintText="Cornelius" floatingLabelText="First Name" value={this.state.first_name} onChange={this.inputFirstName}

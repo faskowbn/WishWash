@@ -76,7 +76,6 @@ export class Login extends React.Component {
         });
     }
     onFailure(error) {
-        console.log("hey");
         console.log(error);
     }
 
@@ -98,7 +97,6 @@ export class Login extends React.Component {
     render() {
         return (
             <div>
-                <div id="my-signin2"></div>
             </div>
         );
     }
