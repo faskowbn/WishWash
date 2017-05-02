@@ -21,6 +21,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {deepOrange500} from 'material-ui/styles/colors';
+import Avatar from 'material-ui/Avatar'
 import RaisedButton from 'material-ui/RaisedButton';
 
 const muiTheme = getMuiTheme({
@@ -33,7 +34,7 @@ class User {
     constructor() {
         // See if user is in localStorage
         const data = localStorage.getItem('user');
-        this.data = data ? JSON.parse(data) : {
+        this.data = data !== undefined && data !== "undefined" ? JSON.parse(data) : {
             last_name: "",
             first_name: "",
             username: "",
@@ -101,7 +102,14 @@ class App extends React.Component {
                             <div id="my-signin2" style={{display: "block"}}></div>
                             {this.props.route.user.loggedIn ?
                             <LoggedIn user={this.props.route.user} /> : <Login user={this.props.route.user} />}
-                        </div>} />
+                        </div>}
+                    iconElementRight={
+                        <div>
+                            {this.props.route.user.loggedIn && !this.props.location.pathname.includes(this.props.route.user.getUser().username) ?
+                                <Avatar src={this.props.route.user.getUser().imageUrl}/> : null}
+                        </div>
+                    }
+                />
                 <div className="container">
                     {this.props.children}
                 </div>

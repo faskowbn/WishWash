@@ -57,12 +57,12 @@ module.exports.createUser = function(req, res) {
                             bio: data.bio
                         });
 
-                        newUser.save(function (err) {
+                        newUser.save(function (err, user) {
                             if (err) {
                                 res.status(400).send({error: 'data could not save to database', err: err});
                             } else {
                                 res.status(201).send({
-                                    id: newUser._id
+                                    user: user
                                 });
                             }
                         })

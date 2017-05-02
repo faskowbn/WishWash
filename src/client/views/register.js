@@ -34,7 +34,7 @@ export class Register extends React.Component {
             bio: '',
             open: false,
             agreement: false
-        }
+        };
 
         //  this.handleChange = this.handleChange.bind(this);
         this.inputFirstName = this.inputFirstName.bind(this);
@@ -155,11 +155,11 @@ export class Register extends React.Component {
             data: {'first_name': first_name, 'last_name': last_name,
                 'username':username, 'phone':phone_number, 'gender':gender_choice,
                 'genderOfWasher':gender_preference, 'location':dorm_choice,
-                'primary_email': localStorage.getItem('email')},
-            success: function(id) {
+                'primary_email': localStorage.getItem('email'), 'imageUrl': localStorage.getItem('imageUrl')},
+            success: function(data) {
                 localStorage.removeItem('email');
-                this.props.route.user.logIn(id);
-                console.log(id);
+                localStorage.removeItem('imageUrl');
+                this.props.route.user.logIn(data.user);
                 browserHistory.push('/profile/' + username);
             }.bind(this),
             error: function(err) {
@@ -169,7 +169,6 @@ export class Register extends React.Component {
     }
 
     render() {
-
         let header = (<div>
             <h1>WishWash Registration</h1>
             <h2>Sign Up Below!</h2>
@@ -212,18 +211,20 @@ export class Register extends React.Component {
                          value = attribute, not variable*/}
                         <DropDownMenu style={style} value={this.state.gender_choice} onChange={this.chooseGender}>
                             <MenuItem value={0} primaryText="What gender do you identify as?" />
-                            <MenuItem value={1} primaryText="Male" />
-                            <MenuItem value={2} primaryText="Female" />
-                            <MenuItem value={3} primaryText="Non-Binary" />
-                            <MenuItem value={4} primaryText="Other" />
+                            <MenuItem value="Male" primaryText="Male" />
+                            <MenuItem value="Female" primaryText="Female" />
+                            <MenuItem value="Non-Binary" primaryText="Non-Binary" />
+                            <MenuItem value="Other" primaryText="Other" />
                         </DropDownMenu><br /><br />
 
                         <DropDownMenu style={style} value={this.state.gender_preference} onChange={this.chooseGenderPreference}>
                             <MenuItem value={0} primaryText="Preference for gender that does your laundry?" />
-                            <MenuItem value={1} primaryText="Male" />
-                            <MenuItem value={2} primaryText="Female" />
-                            <MenuItem value={3} primaryText="No Preference" />
-                        </DropDownMenu><br />
+                            <MenuItem value="Male" primaryText="Male" />
+                            <MenuItem value="Female" primaryText="Female" />
+                            <MenuItem value="Non-Binary" primaryText="Non-Binary" />
+                            <MenuItem value="Other" primaryText="Other" />
+                        </DropDownMenu><br /><br />
+
 
                         <TextField style={style} hintText="I love WishWash" floatingLabelText="Tell us about yourself!" value={this.state.bio} onChange={this.inputBio}
                                    id="bio" label="bio"/><br />

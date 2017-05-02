@@ -124,6 +124,33 @@
  );
  }
  }*/
+/*
+ handleFieldChange(event, index, value, field) {
+ let user = this.state.user;
+ user[field] = value;
+ $.ajax({
+ type: 'PUT',
+ url: '/v1/user',
+ data: {
+ first_name: this.state.user.first_name,
+ last_name: this.state.user.last_name,
+ phone: this.state.user.phone,
+ gender: this.state.user.gender,
+ genderOfWasherPreferences: this.state.user.genderOfWasherPreferences,
+ location: this.state.user.location,
+ imageUrl: this.state.user.imageUrl,
+ bio: this.state.user.bio
+ },
+ success: function (data) {
+ this.setState({user: user});
+ }.bind(this),
+ error: function (err) {
+ alert("could not edit user information)");
+ }
+ }.bind(this))
+ }
+ */
+
 
 'use strict';
 

@@ -56,7 +56,7 @@ export class Login extends React.Component {
                             user["gender"] = data.user.gender;
                             user["genderOfWasherPreferences"] = data.user.genderOfWasherPreferences;
                             user["location"] = data.user.location;
-                            user["imageUrl"] = data.user.imagedUrl;
+                            user["imageUrl"] = profile.getImageUrl();
                             user["created"] = data.user.created;
                             user["loadsWished"] = data.user.loadsWished;
                             user["loadsWashed"] = data.user.loadsWashed;
@@ -76,6 +76,7 @@ export class Login extends React.Component {
                 error: function(err) {
                     console.log("Profile not found ... redirecting to registration");
                     localStorage.setItem('email', profile.getEmail());
+                    localStorage.setItem('imageUrl', profile.getImageUrl());
                     browserHistory.push("/register");
                 }
             });
