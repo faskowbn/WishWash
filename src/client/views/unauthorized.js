@@ -1,34 +1,6 @@
 /**
  * Created by brad on 3/31/2017.
  */
-/*import React from 'react';
-
- import { Card, CardHeader, } from 'material-ui/Card';
-
- class UnauthorizedPage extends React.Component {
- constructor(props) {
- super(props);
- }
-
- render() {
- return (
- <Card className="center-card">
- <CardHeader
- className = "center-card-header"
- title="Uh oh!"
- subtitle="You aren't authorized to be here."
- actAsExpander={false}
- showExpandableButton={false}
- style={{
- padding: '16px',
- }}
- textStyle={{
- paddingRight: '0',
- }} />
- </Card>
- );
- }
- }
 
  /*******************************************************************/
 
@@ -63,7 +35,7 @@ export class Unauthorized extends React.Component {
                 <h1 style={style}>students with a vanderbilt.edu email address. </h1>
                 <h1 style={style}>If you have a vandy address, try to log in again </h1>
                 <h1 style={style}>with your vandy account </h1>
-                <Link to="/">Take me to login...Reload the page after clicking "sign out"</Link>
+                <Link to="/" style={style}>Take me to login</Link>
             </div>
         );
     }
