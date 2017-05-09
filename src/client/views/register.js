@@ -30,7 +30,7 @@ export class Register extends React.Component {
             phone_number: '',
             dorm_choice: 0,
             gender_choice: 0,
-            gender_preference: 0,
+            gender_preference: [false,false,false],
             bio: '',
             open: false,
             agreement: false
@@ -47,7 +47,6 @@ export class Register extends React.Component {
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setAgreement = this.setAgreement.bind(this);
-        this.chooseGenderPreference = this.chooseGenderPreference.bind(this);
     }
 
     handleOpen() {
@@ -86,9 +85,15 @@ export class Register extends React.Component {
         this.setState({gender_choice: value});
     }
 
-    chooseGenderPreference(event, index, value) {
-        this.setState({gender_preference: value});
-    }
+/*    chooseGenderPreference(event, index, value) {
+        console.log(index);
+        const tmp = this.state.gender_preference;4
+        console.log(value);
+        tmp[value] = index;
+        //gender_preference[index] = value;
+        //this.setState({gender_preference});
+        console.log(this.state.gender_preference);
+    }*/
 
     setAgreement(event, index, value){
         let tmp = !(this.state.agreement);
@@ -105,7 +110,27 @@ export class Register extends React.Component {
         let gender_choice = this.state.gender_choice;
         let bio = this.state.bio;
         let agreement = this.state.agreement;
+
+        if(document.getElementById("malePref").checked == true){
+          this.state.gender_preference[0] = true;
+        } else {
+          this.state.gender_preference[0] = false;
+        }
+
+        if(document.getElementById("femalePref").checked == true){
+          this.state.gender_preference[1] = true;
+        } else {
+          this.state.gender_preference[1] = false;
+        }
+
+        if(document.getElementById("nonBinaryPref").checked == true){
+          this.state.gender_preference[2] = true;
+        } else {
+          this.state.gender_preference[2] = false;
+        }
+
         let gender_preference = this.state.gender_preference;
+        console.log(gender_preference);
 
         event.preventDefault();
 
@@ -139,7 +164,8 @@ export class Register extends React.Component {
             return false;
         }
 
-        if(gender_preference === 0) {
+        if(this.state.gender_preference[0] == false && this.state.gender_preference[1] == false
+          && this.state.gender_preference[2] == false) {
             alert("Please pick washer gender prefernece (or lack thereof)");
             return false;
         }
@@ -154,7 +180,7 @@ export class Register extends React.Component {
             url: "/v1/user",
             data: {'first_name': first_name, 'last_name': last_name,
                 'username':username, 'phone':phone_number, 'gender':gender_choice,
-                'genderOfWasher':gender_preference, 'location':dorm_choice,
+                'genderOfWasherPreferences':gender_preference, 'location':dorm_choice,
                 'primary_email': localStorage.getItem('email'), 'imageUrl': localStorage.getItem('imageUrl')},
             success: function(data) {
                 localStorage.removeItem('email');
@@ -169,6 +195,7 @@ export class Register extends React.Component {
     }
 
     render() {
+
         let header = (<div>
             <h1>WishWash Registration</h1>
             <h2>Sign Up Below!</h2>
@@ -181,76 +208,99 @@ export class Register extends React.Component {
             clear: 'left',
         };
 
+        let nameInput = (<div>
+          <TextField hintText="Cornelius" floatingLabelText="First Name" value={this.state.first_name} onChange={this.inputFirstName}
+                     id="first_name" label="first name" /><br />
+          <TextField hintText="Vanderbilt" floatingLabelText="Last Name" value={this.state.last_name} onChange={this.inputLastName}
+                     id="last_name" label="last name" /><br />
+          <TextField  hintText="ZepposDaKing999" floatingLabelText="Enter Username" value={this.state.username} onChange={this.inputUsername}
+                     id="username" label="username" /><br />
+          <TextField hintText="Gimmie dem digits" floatingLabelText="Phone Number" value={this.state.phone_number} onChange={this.inputPhoneNumber}
+                     id="phone_number" label="phone number" /><br />
+          </div>
+        )
+
+        let dorm = (<div>
+          <DropDownMenu value={this.state.dorm_choice} onChange={this.chooseDorm}>
+              <MenuItem value={0} primaryText="What dorm do you do laundry in?" />
+              <MenuItem value={1} primaryText="Branscomb" />
+              <MenuItem value={2} primaryText="Commons" />
+              <MenuItem value={3} primaryText="Towers" />
+              <MenuItem value={4} primaryText="Kissam" />
+              <MenuItem value={5} primaryText="Blakemore" />
+          </DropDownMenu>
+          <br />
+          <br />
+          </div>
+        )
+
+        /*this.state.gender_choice = data that contains what user chose
+         value = attribute, not variable*/
+        let genderChoice = (<div>
+          <DropDownMenu value={this.state.gender_choice} onChange={this.chooseGender}>
+              <MenuItem value={0} primaryText="What gender do you identify as?" />
+              <MenuItem value="Male" primaryText="Male" />
+              <MenuItem value="Female" primaryText="Female" />
+              <MenuItem value="Non-Binary" primaryText="Non-Binary" />
+              <MenuItem value="Other" primaryText="Other" />
+          </DropDownMenu>
+          </div>
+        )
+
+        let genderPreference = (<div>
+          <p>What gender preferences do you have for laundry?<br/>(pick one or multiple)</p>
+          <Checkbox label="Male" id="malePref" /><br />
+          <Checkbox label="Female" id="femalePref" /><br />
+          <Checkbox label="Non-Binary" id="nonBinaryPref" /><br />
+          </div>
+        )
+
+        let biography = (<div>
+          <TextField  hintText="I love WishWash" floatingLabelText="Tell us about yourself!" value={this.state.bio} onChange={this.inputBio}
+          id="bio" label="bio"/>
+          </div>
+        )
+
+        let agreement = (<div>
+          <Checkbox label="I have read and agreed to the WishWash Terms and Conditions" onCheck={this.setAgreement} /><br />
+          </div>
+        )
+
+        let buttons = (<div>
+          <RaisedButton label="Terms and Conditions" onTouchTap={this.handleOpen} />
+          <Dialog title="WishWash Terms and Conditions" open={this.state.open} onRequestClose={this.handleClose} autoScrollBodyContent={true}>
+              <br /><span style={{color: '#ff0000'}}>Terms of Service</span><br /><br />
+              WishWash ("we", "us", "our", "WishWash") present the following terms and conditions, which govern your use of the WishWash site (Website).
+              The Website is offered subject to your acceptance, without modification, of all of the terms and conditions contained within, along with all
+              other operating rules, policies and procedures that may be published from time to time on this Website by us (collectively, the Agreement).
+              Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the Website, you agree that you
+              are bound by the terms and conditions of this Agreement. If you do not agree to all the terms and conditions of this Agreement, then you may not
+              access the Website or use any services.<br /><br />
+              <span style={{color:'#ff4d4d'}}>Limitation of Liability</span><br /><br />
+              You expressly understand and agree that in no event will WishWash be liable with respect to any subject matter of this agreement under any contract,
+              negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement
+              or substitute products or services; (iii) interruption of use or loss or corruption of data; (iv) any statements or conduct of any third party on the
+              service; or (v) any unauthorized access to or alterations of your Content. We shall have no liability for any failure or delay due to matters
+              beyond our reasonable control.
+          </Dialog>
+          <br /><br />
+
+          <RaisedButton className="raised-button" style={{align: 'center'}} label="Submit" onTouchTap={this.handleSubmit.bind(this)} />
+          </div>
+          )
+
         return (
             <div>
                 <Card style={{width:'50%', margin: "0 auto"}}>
                     <paper style={{textAlign:'center'}}>
                         {header}
-                        <TextField style={style} hintText="Cornelius" floatingLabelText="First Name" value={this.state.first_name} onChange={this.inputFirstName}
-                                   id="first_name" label="first name" /><br />
-                        <TextField style={style} hintText="Vanderbilt" floatingLabelText="Last Name" value={this.state.last_name} onChange={this.inputLastName}
-                                   id="last_name" label="last name" /><br />
-                        <TextField style={style} hintText="ZepposDaKing999" floatingLabelText="Enter Username" value={this.state.username} onChange={this.inputUsername}
-                                   id="username" label="username" /><br />
-                        <TextField style={style} hintText="Gimmie dem digits" floatingLabelText="Phone Number" value={this.state.phone_number} onChange={this.inputPhoneNumber}
-                                   id="phone_number" label="phone number" /><br />
-                        <br />
-
-                        <DropDownMenu style={style} value={this.state.dorm_choice} onChange={this.chooseDorm}>
-                            <MenuItem value={0}   primaryText="What dorm do you do laundry in?" />
-                            <MenuItem value={1} primaryText="Branscomb" />
-                            <MenuItem value={2} primaryText="Commons" />
-                            <MenuItem value={3} primaryText="Towers" />
-                            <MenuItem value={4} primaryText="Kissam" />
-                            <MenuItem value={5} primaryText="Blakemore" />
-                        </DropDownMenu>
-                        <br />
-                        <br />
-
-                        {/*this.state.gender_choice = data that contains what user chose
-                         value = attribute, not variable*/}
-                        <DropDownMenu style={style} value={this.state.gender_choice} onChange={this.chooseGender}>
-                            <MenuItem value={0} primaryText="What gender do you identify as?" />
-                            <MenuItem value="Male" primaryText="Male" />
-                            <MenuItem value="Female" primaryText="Female" />
-                            <MenuItem value="Non-Binary" primaryText="Non-Binary" />
-                            <MenuItem value="Other" primaryText="Other" />
-                        </DropDownMenu><br /><br />
-
-                        <DropDownMenu style={style} value={this.state.gender_preference} onChange={this.chooseGenderPreference}>
-                            <MenuItem value={0} primaryText="Preference for gender that does your laundry?" />
-                            <MenuItem value="Male" primaryText="Male" />
-                            <MenuItem value="Female" primaryText="Female" />
-                            <MenuItem value="Non-Binary" primaryText="Non-Binary" />
-                            <MenuItem value="Other" primaryText="Other" />
-                        </DropDownMenu><br /><br />
-
-
-                        <TextField style={style} hintText="I love WishWash" floatingLabelText="Tell us about yourself!" value={this.state.bio} onChange={this.inputBio}
-                                   id="bio" label="bio"/><br />
-                        <br />
-
-                        <Checkbox label="I have read and agreed to the WishWash Terms and Conditions" onCheck={this.setAgreement} /><br />
-
-                        <RaisedButton label="Terms and Conditions" onTouchTap={this.handleOpen} />
-                        <Dialog title="WishWash Terms and Conditions" open={this.state.open} onRequestClose={this.handleClose} autoScrollBodyContent={true}>
-                            <br /><span style={{color: '#ff0000'}}>Terms of Service</span><br /><br />
-                            WishWash ("we", "us", "our", "WishWash") present the following terms and conditions, which govern your use of the WishWash site (Website).
-                            The Website is offered subject to your acceptance, without modification, of all of the terms and conditions contained within, along with all
-                            other operating rules, policies and procedures that may be published from time to time on this Website by us (collectively, the Agreement).
-                            Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the Website, you agree that you
-                            are bound by the terms and conditions of this Agreement. If you do not agree to all the terms and conditions of this Agreement, then you may not
-                            access the Website or use any services.<br /><br />
-                            <span style={{color:'#ff4d4d'}}>Limitation of Liability</span><br /><br />
-                            You expressly understand and agree that in no event will WishWash be liable with respect to any subject matter of this agreement under any contract,
-                            negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement
-                            or substitute products or services; (iii) interruption of use or loss or corruption of data; (iv) any statements or conduct of any third party on the
-                            service; or (v) any unauthorized access to or alterations of your Content. We shall have no liability for any failure or delay due to matters
-                            beyond our reasonable control.
-                        </Dialog>
-                        <br /><br />
-
-                        <RaisedButton className="raised-button" style={{align: 'center'}} label="Submit" onTouchTap={this.handleSubmit.bind(this)} />
+                        {nameInput}
+                        {biography}
+                        {dorm}
+                        {genderChoice}
+                        {genderPreference}
+                        {agreement}
+                        {buttons}
                     </paper>
                 </Card>
             </div>
