@@ -85,16 +85,6 @@ export class Register extends React.Component {
         this.setState({gender_choice: value});
     }
 
-/*    chooseGenderPreference(event, index, value) {
-        console.log(index);
-        const tmp = this.state.gender_preference;4
-        console.log(value);
-        tmp[value] = index;
-        //gender_preference[index] = value;
-        //this.setState({gender_preference});
-        console.log(this.state.gender_preference);
-    }*/
-
     setAgreement(event, index, value){
         let tmp = !(this.state.agreement);
         this.setState({agreement: tmp});
