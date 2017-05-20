@@ -25,14 +25,8 @@ export class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: undefined
+            user: this.props.route.user.getUser(),
         };
-    }
-
-    componentDidMount(){
-        this.setState({
-            "user": this.props.route.user.getUser()
-        });
     }
 
     render() {
@@ -72,6 +66,7 @@ export class Profile extends React.Component {
             let averageWashRating = this.state.user.averageWashRating;
             let bio = this.state.user.bio;
 
+            console.log(this.state.user.location)
             //let grayStar = "https://i.imgur.com/wGvUNJ6.png";
             //let yellowStar = "https://i.imgur.com/kc8B7i7.png";
             //let halfStar = "https://i.imgur.com/T2UYRwF.png";
@@ -99,17 +94,17 @@ export class Profile extends React.Component {
                             <h3>{gender}</h3>
                         </CardText>
 
-                        <TextField hintText={phone} style={{margin: 15, color: '#000000'}} floatingLabelText="Phone Number"
+                        <TextField defaultValue={phone} style={{margin: 15, color: '#000000'}} floatingLabelText="Phone Number"
                                    onChange={this.handleFieldChange}/>
                         <br />
 
                         <label style={{margin: 15, color: '#000000', display: 'inline-block'}}>Residence Hall</label><br />
                         <DropDownMenu value={this.state.user.location} onChange={this.handleFieldChange}>
-                            <MenuItem value={1} primaryText="Branscomb" />
-                            <MenuItem value={2} primaryText="Commons" />
-                            <MenuItem value={3} primaryText="Towers" />
-                            <MenuItem value={4} primaryText="Kissam" />
-                            <MenuItem value={5} primaryText="Blakemore" />
+                          <MenuItem value={1} primaryText="Branscomb" />
+                          <MenuItem value={2} primaryText="Commons" />
+                          <MenuItem value={3} primaryText="Towers" />
+                          <MenuItem value={4} primaryText="Kissam" />
+                          <MenuItem value={5} primaryText="Blakemore" />
                         </DropDownMenu>
                         <br />
                         <br />
@@ -152,4 +147,3 @@ export class Profile extends React.Component {
         );
     }
 }
-

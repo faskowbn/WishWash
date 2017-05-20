@@ -61,7 +61,9 @@ export class MessageBoard extends React.Component {
     render() {
         return (
             <div>
-                <h1>We are excited you're here </h1>
+                <h1>Wish Wash Message Board</h1>
+                <h2>Wash Messages</h2>
+                <h2>Wish Messages</h2>
             </div>
         );
     }
