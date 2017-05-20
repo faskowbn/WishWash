@@ -29,6 +29,12 @@ export class Profile extends React.Component {
         };
     }
 
+    componentDidMount(){
+      this.setState({
+        "user": this.props.route.user.getUser()
+      });
+    }
+
     render() {
         /* getStars
          * returns pictures of 0 to 5 stars, else shows nothing.
